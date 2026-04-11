@@ -37,6 +37,8 @@ Age
 
 ## Machine Learning Pipeline
 
+![EDA](images/mermaid-diagram.png)
+
 ## 🤖 Models Compared
 
 | Model               | Description                |
@@ -88,8 +90,9 @@ Interface simple permettant :
 Saisie des données patient
 Prédiction en temps réel
 Résultat clair et exploitable
-
-**streamlit run app.py**
+```bash
+streamlit run app.py
+```
 
 ## Tech Stack
 Python
@@ -102,7 +105,9 @@ Streamlit
 ## ⚙️ Installation
 
 # Clone repo
-git clone https://github.com/your-username/diabetes-ai.git
+```bash
+git clone https://github.com/Julo-19/Diabet-Predic
+
 
 # Move into project
 cd diabetes-ai
@@ -112,6 +117,7 @@ pip install -r requirements.txt
 
 # Run app
 streamlit run app.py
+```
 
 ## 🧑‍💻 Author
 
