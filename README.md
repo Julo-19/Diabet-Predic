@@ -1,6 +1,6 @@
 ## 🩺 AI-Powered Diabetes Risk Prediction
 Turning Data into Early Diagnosis Insights
-<p align="center"> <b>Un système intelligent basé sur le Machine Learning pour prédire le risque de diabète</b><br/> <i>Projet académique – Systèmes Intelligents </i> </p>
+<p align="center"> <b>Un système intelligent basé sur le Machine Learning pour prédire le risque de diabète</b><br/> <i>Projet Systèmes Intelligents </i> </p>
 
 ## 🚀 Overview
 
@@ -123,7 +123,7 @@ streamlit run app.py
 
 Souleymane BARRO
 🎓 Master Ingénierie Logicielle – UVS
-💻 Full-Stack Developer | AI Enthusiast | DevOps Learner
+💻 software engineer | AI Enthusiast | DevOps Learner 
 
 ## ⭐ Support
 
