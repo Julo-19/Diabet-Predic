@@ -1,6 +1,6 @@
 ## 🩺 AI-Powered Diabetes Risk Prediction
 Turning Data into Early Diagnosis Insights
-<p align="center"> <b>Un système intelligent basé sur le Machine Learning pour prédire le risque de diabète</b><br/> <i>Projet académique – Systèmes Intelligents | UVS</i> </p>
+<p align="center"> <b>Un système intelligent basé sur le Machine Learning pour prédire le risque de diabète</b><br/> <i>Projet académique – Systèmes Intelligents </i> </p>
 
 ## 🚀 Overview
 
