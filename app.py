@@ -1,10 +1,10 @@
+import os
 import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns # Pour des graphiques plus esthétiques
-
+import seaborn as sns
 
 st.set_page_config(page_title="Diabète AI-Predict Dashboard", layout="wide", page_icon="🩺")
 
@@ -32,14 +32,15 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+# Chemins absolus pour Streamlit Cloud
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Chargement des fichiers (Modèle, Scaler ET Données)
-@st.cache_resource # Pour éviter de recharger à chaque clic
+@st.cache_resource
 def load_assets():
-    model = joblib.load('modele_diabete.pkl')
-    scaler = joblib.load('scaler_diabete.pkl')
-    # Chargement du dataset pour les graphiques comparatifs
-    # Assure-toi que 'diabetes.csv' est dans le même dossier
-    df_historical = pd.read_csv('diabetes.csv')
+    model = joblib.load(os.path.join(BASE_DIR, 'modele_diabete.pkl'))
+    scaler = joblib.load(os.path.join(BASE_DIR, 'scaler_diabete.pkl'))
+    df_historical = pd.read_csv(os.path.join(BASE_DIR, 'diabetes.csv'))
     return model, scaler, df_historical
 
 try:
@@ -48,7 +49,7 @@ except FileNotFoundError:
     st.error("🚨 Erreur : Fichiers requis introuvables. Assurez-vous que 'modele_diabete.pkl', 'scaler_diabete.pkl' et 'diabetes.csv' sont dans le même dossier.")
     st.stop()
 
-# Barre latérale (Sidebar) - Simplifiée
+# Barre latérale (Sidebar)
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/2864/2864448.png", width=100)
     st.header("Informations Système")
@@ -89,24 +90,18 @@ with st.container():
 
 st.markdown("---")
 
-#Logique de prédiction et affichage dynamique des résultats
+# Logique de prédiction et affichage dynamique des résultats
 if st.button(" LANCER L'ANALYSE DU RISQUE"):
-    # Préparation des données pour le modèle
     features = np.array([[preg, gluco, bp, skin, insu, bmi, dpf, age]])
-    # Application du scaling
     features_scaled = scaler.transform(features)
     
-    # Prédiction et probabilité
     prediction = model.predict(features_scaled)
     proba = model.predict_proba(features_scaled)[0][1]
 
-    # --- Section Résultats Visuels ---
     st.header(" Résultats de l'Analyse")
     
-  
     main_res_col1, main_res_col2 = st.columns([1.2, 2], gap="large")
 
-    # Colonne Gauche : Diagnostic & Interprétation
     with main_res_col1:
         st.subheader("📢 Diagnostic Suggéré")
         if prediction[0] == 1:
@@ -116,11 +111,9 @@ if st.button(" LANCER L'ANALYSE DU RISQUE"):
             st.success(f"✅ RISQUE FAIBLE (Probabilité : {proba:.1%})")
             st.markdown("👉 *Le modèle suggère que ce patient est sain.*")
         
-        # Affichage de l'indicateur de confiance
         st.metric(label="Score de Confiance de l'IA", value=f"{proba:.1%}", help="Probabilité que le patient soit diabétique selon le modèle.")
         st.divider()
 
-        # Interprétation détaillée
         st.subheader("🔍 Interprétation des Facteurs Clés")
         with st.expander("Voir l'analyse des facteurs influents", expanded=True):
             if gluco > 140:
@@ -137,30 +130,18 @@ if st.button(" LANCER L'ANALYSE DU RISQUE"):
             if prediction[0] == 1:
                 st.markdown("**Recommandation :** Une consultation médicale pour des examens complémentaires (ex: HbA1c) est vivement conseillée.")
 
-    # Colonne Droite : Le Graphique Comparative Dynamique
     with main_res_col2:
         st.subheader("📊 Comparaison : Où se situe le patient ?")
         st.markdown(f"Ce graphique positionne le taux de **Glucose ({gluco} mg/dL)** de votre patient (ligne rouge) par rapport à la distribution historique des 768 patients du dataset Pima.")
         
-        # Création du graphique Matplotlib/Seaborn
         fig, ax = plt.subplots(figsize=(10, 5))
-        
-        # Histogramme de fond (Population)
         sns.histplot(df_historical['Glucose'], bins=30, kde=True, color='#a0cfff', edgecolor='white', alpha=0.8, ax=ax)
-        
-        # Ligne verticale rouge pour le patient actuel
         ax.axvline(gluco, color='#dc3545', linestyle='--', linewidth=3, label='Ce Patient')
-        
-        # Personnalisation du graphique
         ax.set_title("Distribution du Taux de Glucose (Population vs Patient actuel)", fontsize=14, fontweight='bold')
         ax.set_xlabel("Taux de Glucose (mg/dL)", fontsize=12)
         ax.set_ylabel("Nombre de Patients (Fréquence)", fontsize=12)
         ax.legend()
         ax.grid(axis='y', alpha=0.3)
-        
-        # Amélioration du rendu visuel de Matplotlib
         sns.despine(left=True, bottom=True)
-        
-        # Affichage du graphique dans Streamlit
         st.pyplot(fig)
         st.caption("Source des données de fond : Pima Indians Diabetes Database (UCI Machine Learning Repository).")
